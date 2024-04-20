@@ -2,10 +2,11 @@ import { FormEvent, useState } from "react";
 //  useEffect, useRef,
 import * as api from "./api";
 import { Recipe } from "./types";
+import RecipeCard from "./components/RecipeCard";
 import "./App.css";
 
 function App() {
-  const [searchTerm, setSearchTerm] = useState<string>("burgers");
+  const [searchTerm, setSearchTerm] = useState<string>("");
   // useState<string>("");
   const [recipes, setRecipes] = useState<Recipe[]>([]);
 
@@ -43,10 +44,14 @@ function App() {
         </form>
 
         {recipes.map((recipe) => (
-          <div>
-            recipe image location: {recipe.image}
-            recipe title: {recipe.title}
-          </div>
+          <RecipeCard
+            recipe={recipe}
+            // onClick={() => setSelectedRecipe(recipe)}
+            // onFavouriteButtonClick={
+            //   isFavourite ? removeFavouriteRecipe : addFavouriteRecipe
+            // }
+            // isFavourite={isFavourite}
+          />
         ))}
       </div>
     </>
