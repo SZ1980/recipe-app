@@ -4,19 +4,19 @@ import { Recipe } from "../types";
 interface Props {
   recipe: Recipe;
   //   isFavourite: boolean;
-  //   onClick: () => void;
+  onClick: () => void;
   //   onFavouriteButtonClick: (recipe: Recipe) => void;
 }
 
 const RecipeCard = ({
   recipe,
-}: //   onClick,
+  onClick,
+}: //   ,
 //   onFavouriteButtonClick,
 //   isFavourite,
 Props) => {
   return (
-    <div className="recipe-card">
-      {/* onClick={onClick} */}
+    <div className="recipe-card" onClick={onClick}>
       <img src={recipe.image}></img>
       <div className="recipe-card-title">
         {/* <span

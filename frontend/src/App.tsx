@@ -4,15 +4,16 @@ import * as api from "./api";
 import { Recipe } from "./types";
 import RecipeCard from "./components/RecipeCard";
 import "./App.css";
+import RecipeModal from "./components/RecipeModal";
 
 function App() {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  // useState<string>("");
+
   const [recipes, setRecipes] = useState<Recipe[]>([]);
 
-  // const [selectedRecipe, setSelectedRecipe] = useState<Recipe | undefined>(
-  //   undefined
-  // );
+  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | undefined>(
+    undefined
+  );
   // const [selectedTab, setSelectedTab] = useState<Tabs>("search");
   // const [favouriteRecipes, setFavouriteRecipes] = useState<Recipe[]>([]);
   const pageNumber = useRef(1);
@@ -57,7 +58,7 @@ function App() {
         {recipes.map((recipe) => (
           <RecipeCard
             recipe={recipe}
-            // onClick={() => setSelectedRecipe(recipe)}
+            onClick={() => setSelectedRecipe(recipe)}
             // onFavouriteButtonClick={
             //   isFavourite ? removeFavouriteRecipe : addFavouriteRecipe
             // }
@@ -67,6 +68,7 @@ function App() {
         <button className="view-more-button" onClick={handleViewMoreClick}>
           View More
         </button>
+        {selectedRecipe ? <RecipeModal /> : null}
       </div>
     </>
   );
