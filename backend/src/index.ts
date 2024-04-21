@@ -18,6 +18,12 @@ app.get("/api/recipes/search", async (req, res) => {
   // res.json({message: 'success!'})
 })
 
+app.get("/api/recipes/:recipeId/summary", async (req, res) => {
+  const recipeId = req.params.recipeId;
+  const results = await RecipeAPI.getRecipeSummary(recipeId);
+  return res.json(results);
+});
+
 app.listen(5000, () => {
     console.log('App is running on port 5000!')
 })
