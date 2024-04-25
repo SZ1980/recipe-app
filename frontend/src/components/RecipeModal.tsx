@@ -5,10 +5,10 @@ import * as RecipeAPI from "../api";
 
 interface Props {
   recipeId: string;
-  // onClose: () => void;
+  onClose: () => void;
 }
-// , onClose
-const RecipeModal = ({ recipeId }: Props) => {
+
+const RecipeModal = ({ recipeId, onClose }: Props) => {
   const [recipeSummary, setRecipeSummary] = useState<RecipeSummary>();
 
   useEffect(() => {
@@ -36,8 +36,7 @@ const RecipeModal = ({ recipeId }: Props) => {
           <div className="modal-header">
             <h2>{recipeSummary.title}</h2>
             {/* <h2>Recipe Header</h2> */}
-            <span className="close-btn">
-              {/* onClick={onClose} */}
+            <span className="close-btn" onClick={onClose}>
               &times;
             </span>
           </div>
