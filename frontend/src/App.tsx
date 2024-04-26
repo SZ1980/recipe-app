@@ -1,10 +1,12 @@
-import { FormEvent, useState, useRef } from "react";
-//  useEffect,
+import { useEffect, FormEvent, useState, useRef } from "react";
+
 import * as api from "./api";
 import { Recipe } from "./types";
 import RecipeCard from "./components/RecipeCard";
 import "./App.css";
 import RecipeModal from "./components/RecipeModal";
+
+type Tabs = "search" | "favourites";
 
 function App() {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -14,9 +16,23 @@ function App() {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | undefined>(
     undefined
   );
-  // const [selectedTab, setSelectedTab] = useState<Tabs>("search");
-  // const [favouriteRecipes, setFavouriteRecipes] = useState<Recipe[]>([]);
+  const [selectedTab, setSelectedTab] = useState<Tabs>("search");
+  const [favouriteRecipes, setFavouriteRecipes] = useState<Recipe[]>([]);
   const pageNumber = useRef(1);
+
+  useEffect(() => {
+    const fetchFavouriteRecipes = async () => {
+      try {
+        const favouriteRecipes = await api.getFavouriteRecipes();
+        setFavouriteRecipes(favouriteRecipes.results);
+        //
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchFavouriteRecipes();
+  }, []);
 
   const handleSearchSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -44,30 +60,64 @@ function App() {
   return (
     <>
       <div>
-        <form onSubmit={(event) => handleSearchSubmit(event)}>
-          <input
-            type="text"
-            required
-            placeholder="Enter the search term..."
-            value={searchTerm}
-            onChange={(event) => setSearchTerm(event.target.value)}
-          />
-          <button type="submit">submit</button>
-        </form>
+        <div className="tabs">
+          <h1
+            className={selectedTab === "search" ? "tab-active" : ""}
+            onClick={() => setSelectedTab("search")}
+          >
+            Recipe Search
+          </h1>
+          <h1
+            className={selectedTab === "favourites" ? "tab-active" : ""}
+            onClick={() => setSelectedTab("favourites")}
+          >
+            Favourites
+          </h1>
+        </div>
 
-        {recipes.map((recipe) => (
-          <RecipeCard
-            recipe={recipe}
-            onClick={() => setSelectedRecipe(recipe)}
-            // onFavouriteButtonClick={
-            //   isFavourite ? removeFavouriteRecipe : addFavouriteRecipe
-            // }
-            // isFavourite={isFavourite}
-          />
-        ))}
-        <button className="view-more-button" onClick={handleViewMoreClick}>
-          View More
-        </button>
+        {selectedTab === "search" && (
+          <>
+            <form onSubmit={(event) => handleSearchSubmit(event)}>
+              <input
+                type="text"
+                required
+                placeholder="Enter the search term..."
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
+              />
+              <button type="submit">submit</button>
+            </form>
+
+            {recipes.map((recipe) => (
+              <RecipeCard
+                recipe={recipe}
+                onClick={() => setSelectedRecipe(recipe)}
+                // onFavouriteButtonClick={
+                //   isFavourite ? removeFavouriteRecipe : addFavouriteRecipe
+                // }
+                // isFavourite={isFavourite}
+              />
+            ))}
+            <button className="view-more-button" onClick={handleViewMoreClick}>
+              View More
+            </button>
+          </>
+        )}
+
+        {selectedTab === "favourites" && (
+          <div className="recipe-grid">
+            {favouriteRecipes.map((recipe) => (
+              <RecipeCard
+                recipe={recipe}
+                onClick={() => setSelectedRecipe(recipe)}
+                // onFavouriteButtonClick={removeFavouriteRecipe}
+                // isFavourite={true}
+              />
+            ))}
+            {/* This is favourites tab */}
+          </div>
+        )}
+
         {selectedRecipe ? (
           <RecipeModal
             recipeId={selectedRecipe.id.toString()}
